@@ -1,0 +1,28 @@
+{
+  "name": "ex_01",
+  "version": "1.0.0",
+  "description": "ex_01",
+  "main": "ex_01.js",
+  "dependencies": {
+    "bcrypt": "^5.0.0",
+    "cloudinary": "^1.37.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.1.1",
+    "express": "^4.17.1",
+    "generate-password": "^1.5.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^3.5.9",
+    "mongoose": "^5.9.23",
+    "multer": "^1.4.5-lts.1",
+    "node-fetch": "^2.6.11"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  },
+  "scripts": {
+    "start": "nodemon ./app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
