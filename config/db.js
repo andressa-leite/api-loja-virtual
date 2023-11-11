@@ -1,9 +1,11 @@
 const mongoose = require("mongoose");
+require("dotenv").config();
 
 mongoose.connect(
-  "mongodb+srv://admin_user:root@cluster1.z1s7lr7.mongodb.net/test",
+  process.env.MONGODB_URI,
   {
     useNewUrlParser: true,
+    useUnifiedTopology: true 
   }
 );
 

@@ -141,6 +141,11 @@
     "readable-stream" "^2.3.5"
     "safe-buffer" "^5.1.1"
 
+"blob-util@^2.0.2":
+  "integrity" "sha512-T7JQa+zsXXEa6/8ZhHcQEW1UFfVM49Ts65uBkFL6fz2QmrElqmbajIDJvuA0tEhRe5eIjpV9ZF+0RfZR9voJFQ=="
+  "resolved" "https://registry.npmjs.org/blob-util/-/blob-util-2.0.2.tgz"
+  "version" "2.0.2"
+
 "bluebird@3.5.1":
   "integrity" "sha512-MKiLiV+I1AA596t9w1sQJ8jkiSr5+ZKi0WKrYGUn6d1Fx+Ij4tIj+m2WMQSGczs5jZVxV339chE8iwk6F64wjA=="
   "resolved" "https://registry.npmjs.org/bluebird/-/bluebird-3.5.1.tgz"

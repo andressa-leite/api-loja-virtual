@@ -5,6 +5,7 @@
   "main": "ex_01.js",
   "dependencies": {
     "bcrypt": "^5.0.0",
+    "blob-util": "^2.0.2",
     "cloudinary": "^1.37.0",
     "cors": "^2.8.5",
     "dotenv": "^16.1.1",

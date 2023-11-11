@@ -5,6 +5,9 @@ const jwt = require("jsonwebtoken");
 const config = require("../config/config");
 const cloudinary = require('cloudinary').v2;
 const fetchF = require('node-fetch');
+const base64Stringbase64 = require('blob-util');
+const Blob = require('buffer').Blob
+const fs = require('fs')
 
 exports.getUsers = async (req, res) => {
   try {
@@ -19,6 +22,9 @@ exports.getUsers = async (req, res) => {
 
 exports.getUser = async (req, res) => {
   const { id } = req.params;
+
+  /* link da aula */ 
+  // https://github.com/furbo1/Beer-App-Api/blob/main/src/beer/beer.controller.js
 
   try {
     const user = await User.findById(id);
@@ -43,7 +49,7 @@ exports.createUser = async (req, res) => {
     res.status(400).json("An error has occurred!");
   } catch (error) {
     res.status(400).json({ error });
-  }
+  } 
 };
 
 async function dataUrlToFile(dataUrl, filename) {
@@ -52,25 +58,64 @@ async function dataUrlToFile(dataUrl, filename) {
     .then(blob => new File([blob], filename, { type: blob.type }))
 }
 
+// exports.updateUser = async (req, res) => {
+//   const { id } = req.params;
+//   const user = req.body;
+
+
+//   try {
+//     const f = base64Stringbase64.base64StringToBlob(req.body.image.split(',')[1], 'image/png');
+//     //console.log('~f', f);
+    
+//     const file = dataUrlToFile(f, 'avatar');
+//     console.log(file)
+//     const updatedUser = await User.findByIdAndUpdate(
+//       mongoose.Types.ObjectId(id),
+//       { $set: user },
+//       { new: true }
+//     );
+
+//     if (updatedUser) return res.json(updatedUser); 
+
+//     return res.status(400).json("An error has occurred!");
+//   } catch (error) {
+//     console.log(error)
+//     res.status(400).json({ error });
+//   }
+// };
+
 exports.updateUser = async (req, res) => {
   const { id } = req.params;
   const user = req.body;
 
-
   try {
-    const file = dataUrlToFile(req.body, 'avatar');
-    console.log(file)
-    const updatedUser = await User.findByIdAndUpdate(
-      mongoose.Types.ObjectId(id),
-      { $set: user },
-      { new: true }
-    );
+    const file = req.body.image.split(';base64,').pop();
 
-    if (updatedUser) return res.json(updatedUser);
+    fs.writeFile('image.png', file, {encoding: 'base64'}, function(err) {
+        if(err) return res.status(400).send('erro to create the file');
+        
+        cloudinary.uploader.upload('image.png', async function(error, result) {
+            if(error) {
+                return res.status(400).send('erro to upload image to the cloudinary');
+            }
+            user.avatar = result.url;
+            const updatedUser = await User.findOneAndUpdate(
+              {_id:mongoose.Types.ObjectId(id)},
+              user,
+              {returnOriginal: false}
+            );
+            console.log(updatedUser);
 
-    return res.status(400).json("An error has occurred!");
+            if(updatedUser) {
+                return res.status(202).json({message: 'User updated!', data: updatedUser});
+            }else {
+                return res.status(400).json({message:'An error has occured.'});
+            }
+        });
+    });
+
   } catch (error) {
-    res.status(400).json({ error });
+    res.status(400).json({ error: error.message });
   }
 };
 
@@ -91,7 +136,7 @@ const generateToken = (params = {}) => {
   return jwt.sign({ params }, config.key, { expiresIn: config.expiresIn });
 };
 
-exports.uploadAvatar = async (req,res) => {
+/* exports.uploadAvatar = async (req,res) => {
   
   try {
     console.log('file', req.body);
@@ -102,7 +147,7 @@ exports.uploadAvatar = async (req,res) => {
     console.log(error)
   }
  
-}
+}  */ 
 
 exports.login = async (req, res) => {
   try {
