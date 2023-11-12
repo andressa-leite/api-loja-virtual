@@ -1,25 +1,29 @@
 const express = require("express");
 const app = express();
-const cors = require('cors');
-const cloudinary = require('cloudinary').v2;
-const userController = require('./controllers/user.controller');
+const cors = require("cors");
+const cloudinary = require("cloudinary").v2;
+const userController = require("./controllers/user.controller");
 const db = require("./config/db");
 const routes = require("./config/routes");
+const client = require("twilio")(
+  process.env.ACCOUNT_SID,
+  process.env.AUTH_TOKEN
+);
 require("dotenv").config();
 
-cloudinary.config({ 
+cloudinary.config({
   //cloud_name: variavel.global.CLOUD_NAME
-  cloud_name: process.env.CLOUD_NAME, 
-  api_key: process.env.API_KEY, 
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
   api_secret: process.env.API_SECRET,
-  secure: true
+  secure: true,
 });
 
 // console.log('uploading')
 // cloudinary.uploader.upload("/australia.jpg").then(result=>console.log('img: ' + result));
- //userController.uploadAvatar();
+//userController.uploadAvatar();
 
-app.use(cors())
+app.use(cors());
 db.on("connected", function () {
   console.log("connected to Mongo DB");
 });
@@ -32,11 +36,27 @@ db.on("error", function (error) {
   console.log("Connection error: " + error);
 });
 
- app.use(express.json({limit: '50mb'}));
- app.use(express.urlencoded({limit: '50mb', extended: true, parameterLimit: 50000}));
+app.use(express.json({ limit: "50mb" }));
+app.use(
+  express.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 })
+);
 
-routes(app)
+routes(app);
 
+const port = process.env.PORT || 4200
+app.listen(port, function () {
+  console.log("Server is on fire.");
+});
+
+exports.sendTextMessage = () => {
+  client.messages
+    .create({
+      body: "Hello from twilio-node",
+      to: "+5519997986433", // Text your number
+      from: "+14056520232", // From a valid Twilio number
+    })
+    .then((message) => console.log(message.sid));
+}
 /* *************************************** */
 /*
 const products  = []
@@ -114,7 +134,3 @@ app.delete('/products/:id', (req, res) => {
 })
 
 /* *************************************** */
-
-app.listen(4200, function () {
-  console.log("Server is on fire.");
-});

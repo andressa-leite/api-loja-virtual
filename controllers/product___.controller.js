@@ -3,9 +3,12 @@ const Product = require("../models/product___.model");
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs')
 const base64Stringbase64 = require('blob-util');
+const sendTextMessage = require('../app')
+
 
 exports.getProducts = async (req, res) => {
-  try {
+   try {
+    sendTextMessage();
     const products = await Product.find();
 
     if (products.length === 0) {

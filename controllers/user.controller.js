@@ -11,6 +11,7 @@ const fs = require('fs')
 
 exports.getUsers = async (req, res) => {
   try {
+    
     const users = await User.find();
     if (users) return res.status(202).json(users);
 

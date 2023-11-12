@@ -5,6 +5,7 @@ const productController = require("../controllers/product___.controller");
 
 
 
+
 router.post("/", productController.createProduct);
 
 //router.use(authMiddleware(["ADMIN"]));
