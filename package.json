@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "ex_01",
   "main": "ex_01.js",
-  "engines": {"node": "14.x"},
+  "engines": {"node": "18.x"},
   "dependencies": {
     "bcrypt": "^5.0.0",
     "blob-util": "^2.0.2",
