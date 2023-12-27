@@ -5,11 +5,23 @@ const cloudinary = require("cloudinary").v2;
 const userController = require("./controllers/user.controller");
 const db = require("./config/db");
 const routes = require("./config/routes");
-const client = require("twilio")(
-  process.env.ACCOUNT_SID,
-  process.env.AUTH_TOKEN
-);
 require("dotenv").config();
+const accountSid = process.env.ACCOUNT_SID;
+const authToken = process.env.AUTH_TOKEN;
+const client = require("twilio")(
+  accountSid,
+  authToken
+);
+/* const resendLib = require('resend');
+
+const resend = new resendLib.('re_LvetbvWt_JMDk8pHtfM5cdhA8krxfXwi1');
+
+resend.emails.send({
+  from: 'onboarding@resend.dev',
+  to: 'dre_tl@hotmail.com',
+  subject: 'Hello World',
+  html: '<p>Congrats on sending your <strong>first email</strong>!</p>'
+}); */
 
 cloudinary.config({
   //cloud_name: variavel.global.CLOUD_NAME
@@ -43,20 +55,35 @@ app.use(
 
 routes(app);
 
-const port = process.env.PORT || 4200
+const port = process.env.PORT || 4200;
 app.listen(port, function () {
   console.log("Server is on fire.");
 });
 
-exports.sendTextMessage = () => {
+client.messages
+    .create({
+      body: "You have received a message from Twilio",
+      from: "+14056520232",
+      to: "+5519997986433",
+    })
+    .then((message) => console.log(message.body))
+   
+
   client.messages
     .create({
-      body: "Hello from twilio-node",
-      to: "+5519997986433", // Text your number
-      from: "+14056520232", // From a valid Twilio number
+      body: "You have received a message from Twilio",
+      from: "whatsapp:+14155238886",
+      to: "whatsapp:+5519997986433",
     })
-    .then((message) => console.log(message.sid));
-}
+    .then((message) => console.log(message.sid))
+    //to: "whatsapp:+15485775657",
+    //.done();
+
+    /* client.verify.v2.services('MGcabb2a7f825727792b5945318772e589')
+                .verifications
+                .create({to: 'dre_tl@hotmail.com', channel: 'email'})
+                .then(verification => console.log(verification.sid)); */
+
 /* *************************************** */
 /*
 const products  = []

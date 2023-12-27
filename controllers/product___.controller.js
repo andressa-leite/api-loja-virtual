@@ -3,22 +3,33 @@ const Product = require("../models/product___.model");
 const cloudinary = require('cloudinary').v2;
 const fs = require('fs')
 const base64Stringbase64 = require('blob-util');
-const sendTextMessage = require('../app')
+const sendTextMessage = require('../app');
+const { search } = require("../routes/user.router");
 
 
 exports.getProducts = async (req, res) => {
+ // sendTextMessage();
    try {
-    sendTextMessage();
-    const products = await Product.find();
-
-    if (products.length === 0) {
-      return res
-        .status(400)
-        .send({ message: "there aren't any products registered" });
+    if(!req.query?.search) {
+      const products = await Product.find({});
+      if (products.length === 0) {
+        return res
+          .status(400)
+          .send({ message: "there aren't any products registered" });
+      }
+      res.send(products);
+    }else {
+      const products = await Product.find({name: { $regex: req.query?.search} });
+      if (products.length === 0) {
+        return res
+          .status(400)
+          .send({ message: "there aren't any products registered" });
+      }
+      res.send(products);
     }
-    res.send(products);
+   
   } catch (error) {
-    res.status(400).json({ error });
+    res.status(400).json({ error: error.message });
   }
 };
 

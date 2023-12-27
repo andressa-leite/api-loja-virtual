@@ -3,15 +3,16 @@ const User = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const config = require("../config/config");
-const cloudinary = require('cloudinary').v2;
-const fetchF = require('node-fetch');
-const base64Stringbase64 = require('blob-util');
-const Blob = require('buffer').Blob
-const fs = require('fs')
+const cloudinary = require("cloudinary").v2;
+const fetchF = require("node-fetch");
+const base64Stringbase64 = require("blob-util");
+const Blob = require("buffer").Blob;
+const fs = require("fs");
+/* const { Resend } = require("resend");
+const resend = new Resend("re_QxGg15yA_4n7bMS6pXrHQn7vS6N3wyP3i"); */
 
 exports.getUsers = async (req, res) => {
   try {
-    
     const users = await User.find();
     if (users) return res.status(202).json(users);
 
@@ -24,7 +25,7 @@ exports.getUsers = async (req, res) => {
 exports.getUser = async (req, res) => {
   const { id } = req.params;
 
-  /* link da aula */ 
+  /* link da aula */
   // https://github.com/furbo1/Beer-App-Api/blob/main/src/beer/beer.controller.js
 
   try {
@@ -45,29 +46,35 @@ exports.createUser = async (req, res) => {
 
     newUser.password = undefined;
 
+ /*     const data = await resend.emails.send({
+      from: "onboarding@resend.dev",
+      to: ["dre_tl@hotmail.com"],
+      subject: "Hello World",
+      html: "<p>Congrats on sending your <strong>first email</strong>!</p>",
+    }); 
+ */
     if (newUser) return res.status(200).json(newUser);
 
     res.status(400).json("An error has occurred!");
   } catch (error) {
     res.status(400).json({ error });
-  } 
+  }
 };
 
-async function dataUrlToFile(dataUrl, filename) {
+/* async function dataUrlToFile(dataUrl, filename) {
   return fetchF(dataUrl)
-    .then(res => res.blob())
-    .then(blob => new File([blob], filename, { type: blob.type }))
-}
+    .then((res) => res.blob())
+    .then((blob) => new File([blob], filename, { type: blob.type }));
+} */
 
 // exports.updateUser = async (req, res) => {
 //   const { id } = req.params;
 //   const user = req.body;
 
-
 //   try {
 //     const f = base64Stringbase64.base64StringToBlob(req.body.image.split(',')[1], 'image/png');
 //     //console.log('~f', f);
-    
+
 //     const file = dataUrlToFile(f, 'avatar');
 //     console.log(file)
 //     const updatedUser = await User.findByIdAndUpdate(
@@ -76,7 +83,7 @@ async function dataUrlToFile(dataUrl, filename) {
 //       { new: true }
 //     );
 
-//     if (updatedUser) return res.json(updatedUser); 
+//     if (updatedUser) return res.json(updatedUser);
 
 //     return res.status(400).json("An error has occurred!");
 //   } catch (error) {
@@ -90,31 +97,32 @@ exports.updateUser = async (req, res) => {
   const user = req.body;
 
   try {
-    const file = req.body.image.split(';base64,').pop();
+    const file = req.body.image.split(";base64,").pop();
 
-    fs.writeFile('image.png', file, {encoding: 'base64'}, function(err) {
-        if(err) return res.status(400).send('erro to create the file');
-        
-        cloudinary.uploader.upload('image.png', async function(error, result) {
-            if(error) {
-                return res.status(400).send('erro to upload image to the cloudinary');
-            }
-            user.avatar = result.url;
-            const updatedUser = await User.findOneAndUpdate(
-              {_id:mongoose.Types.ObjectId(id)},
-              user,
-              {returnOriginal: false}
-            );
-            console.log(updatedUser);
+    fs.writeFile("image.png", file, { encoding: "base64" }, function (err) {
+      if (err) return res.status(400).send("erro to create the file");
 
-            if(updatedUser) {
-                return res.status(202).json({message: 'User updated!', data: updatedUser});
-            }else {
-                return res.status(400).json({message:'An error has occured.'});
-            }
-        });
+      cloudinary.uploader.upload("image.png", async function (error, result) {
+        if (error) {
+          return res.status(400).send("erro to upload image to the cloudinary");
+        }
+        user.avatar = result.url;
+        const updatedUser = await User.findOneAndUpdate(
+          { _id: mongoose.Types.ObjectId(id) },
+          user,
+          { returnOriginal: false }
+        );
+        console.log(updatedUser);
+
+        if (updatedUser) {
+          return res
+            .status(202)
+            .json({ message: "User updated!", data: updatedUser });
+        } else {
+          return res.status(400).json({ message: "An error has occured." });
+        }
+      });
     });
-
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -148,7 +156,7 @@ const generateToken = (params = {}) => {
     console.log(error)
   }
  
-}  */ 
+}  */
 
 exports.login = async (req, res) => {
   try {
@@ -163,9 +171,8 @@ exports.login = async (req, res) => {
 
     const token = generateToken({ id: user._id });
 
-    return res.send({token,user});
+    return res.send({ token, user });
   } catch (error) {
-    return res.status(400).send(error.message)
+    return res.status(400).send(error.message);
   }
-  
 };
