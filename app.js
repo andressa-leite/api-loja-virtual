@@ -6,12 +6,12 @@ const userController = require("./controllers/user.controller");
 const db = require("./config/db");
 const routes = require("./config/routes");
 require("dotenv").config();
-const accountSid = process.env.ACCOUNT_SID;
+/* const accountSid = process.env.ACCOUNT_SID;
 const authToken = process.env.AUTH_TOKEN;
 const client = require("twilio")(
   accountSid,
   authToken
-);
+); */
 /* const resendLib = require('resend');
 
 const resend = new resendLib.('re_LvetbvWt_JMDk8pHtfM5cdhA8krxfXwi1');
@@ -35,7 +35,23 @@ cloudinary.config({
 // cloudinary.uploader.upload("/australia.jpg").then(result=>console.log('img: ' + result));
 //userController.uploadAvatar();
 
-app.use(cors());
+//app.use(cors());
+
+app.use(
+  cors({
+    origin: ["http://localhost:3000"],
+  })
+);
+
+const rateLimit = require("express-rate-limit");
+
+const limiter = rateLimit({
+  windowMs: 1000, // 1 segundo
+  max: 5, // Limite de 5 solicitações por segundo
+});
+
+// Aplica o limitador a todas as solicitações
+app.use(limiter);
 db.on("connected", function () {
   console.log("connected to Mongo DB");
 });
@@ -60,7 +76,7 @@ app.listen(port, function () {
   console.log("Server is on fire.");
 });
 
-client.messages
+/* client.messages
     .create({
       body: "You have received a message from Twilio",
       from: "+14056520232",
@@ -75,11 +91,11 @@ client.messages
       from: "whatsapp:+14155238886",
       to: "whatsapp:+5519997986433",
     })
-    .then((message) => console.log(message.sid))
-    //to: "whatsapp:+15485775657",
-    //.done();
+    .then((message) => console.log(message.sid)) */
+//to: "whatsapp:+15485775657",
+//.done();
 
-    /* client.verify.v2.services('MGcabb2a7f825727792b5945318772e589')
+/* client.verify.v2.services('MGcabb2a7f825727792b5945318772e589')
                 .verifications
                 .create({to: 'dre_tl@hotmail.com', channel: 'email'})
                 .then(verification => console.log(verification.sid)); */
