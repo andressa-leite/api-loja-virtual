@@ -39,7 +39,7 @@ cloudinary.config({
 
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: ["http://18.217.147.241:3000"],
   })
 );
 
@@ -74,6 +74,7 @@ routes(app);
 const port = process.env.PORT || 4200;
 app.listen(port, function () {
   console.log("Server is on fire.");
+  // process.exit(1)
 });
 
 /* client.messages
