@@ -38,9 +38,9 @@ cloudinary.config({
 //app.use(cors());
 
 app.use(
-  cors({
-    origin: ["https://app.andressaportfolio.com"],
-  })
+  cors(
+    /*origin: ["https://app.andressaportfolio.com"],*/
+  )
 );
 
 const rateLimit = require("express-rate-limit");
