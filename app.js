@@ -39,7 +39,7 @@ cloudinary.config({
 
 app.use(
   cors({
-    origin: ["http://18.217.147.241:3000"],
+    origin: ["https://app.andressaportfolio.com"],
   })
 );
 
